@@ -29,11 +29,19 @@ class Client extends Model implements ClientModelInterface
         'password_client',
         'revoked',
         'allow_scopes',
-        'allow_grant_types',
+        'implicit',
     ];
 
     protected array $hidden = [
         'secret',
+    ];
+
+    protected array $casts = [
+        'personal_access_client' => 'bool',
+        'password_client' => 'bool',
+        'revoked' => 'bool',
+        'allow_scopes' => 'array',
+        'implicit' => 'bool',
     ];
 
     public function user(): BelongsTo
@@ -84,5 +92,22 @@ class Client extends Model implements ClientModelInterface
     public function isConfidential(): bool
     {
         return !empty($this->getSecret());
+    }
+
+    public function isImplicit(): bool
+    {
+        return $this->getAttribute('implicit');
+    }
+
+    public function handlesGrant(?string $grantType): bool
+    {
+        return match ($grantType) {
+            'authorization_code' => !($this->isPersonalAccessClient() || $this->isPasswordClient()),
+            'personal_access' => $this->isPersonalAccessClient() && !empty($this->getSecret()),
+            'password' => $this->isPasswordClient(),
+            'client_credentials' => !empty($this->getSecret()) && !$this->isPasswordClient(),
+            'implicit' => $this->isImplicit(),
+            default => false,
+        };
     }
 }

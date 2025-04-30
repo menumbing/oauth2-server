@@ -8,7 +8,6 @@ use Hyperf\Contract\ConfigInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use Menumbing\OAuth2\Server\Bridge\Entity\Client;
-use Menumbing\OAuth2\Server\Contract\ClientModelInterface;
 use Menumbing\OAuth2\Server\Contract\ClientModelRepositoryInterface;
 
 /**
@@ -38,22 +37,11 @@ class ClientRepository implements ClientRepositoryInterface
     {
         $record = $this->modelRepository->findActive($clientIdentifier);
 
-        if (!$record || !$this->handlesGrant($record, $grantType)) {
+        if (!$record || !$record->handlesGrant($grantType)) {
             return false;
         }
 
         return !$record->isConfidential() || $this->verifySecret($clientSecret, $record->getSecret());
-    }
-
-    protected function handlesGrant(ClientModelInterface $client, string $grantType): bool
-    {
-        return match ($grantType) {
-            'authorization_code' => !($client->isPersonalAccessClient() || $client->isPasswordClient()),
-            'personal_access' => $client->isPersonalAccessClient() && !empty($client->getSecret()),
-            'password' => $client->isPasswordClient(),
-            'client_credentials' => !empty($client->getSecret()) && !$client->isPasswordClient(),
-            default => true,
-        };
     }
 
     protected function verifySecret(string $clientSecret, string $storedHash): bool
