@@ -9,6 +9,8 @@ namespace Menumbing\OAuth2\Server\Contract;
  */
 interface ClientModelInterface
 {
+    public function getIdentifier(): string;
+
     public function getName(): string;
 
     public function getRedirect(): string;

@@ -1,6 +1,7 @@
 <?php
 
 use League\OAuth2\Server\Grant;
+use Menumbing\OAuth2\Server\Repository;
 
 use function Hyperf\Support\env;
 
@@ -27,38 +28,25 @@ return [
         'connection' => env('OAUTH_DB_CONNECTION', 'default'),
     ],
 
-    // Repositories - You need to create these classes
     'repositories' => [
-        'client' => null,
-        'access_token' => null,
-        'scope' => null,
-        'auth_code' => null,
-        'refresh_token' => null,
-        'user' => null, // Required for Password Grant & Auth Code Grant
+        'client' => Repository\ClientModelRepository::class,
+        'user' => Repository\UserModelRepository::class,
+        'auth_code' => Repository\AuthCodeModelRepository::class,
+        'access_token' => Repository\AccessTokenModelRepository::class,
+        'refresh_token' => Repository\RefreshTokenModelRepository::class,
     ],
 
     'grant_types' => [
         // Enable Password Grant (Requires UserRepository)
-        Grant\PasswordGrant::class => [
-            'repository' => 'user', // Reference to the user repository key above
-            //'callback' => [\App\OAuth\Grants\PasswordGrantVerifier::class, 'verify'], // Custom verifier logic
-            'refresh_token_repository' => 'refresh_token', // Reference to the refresh token repository
-        ],
+        Grant\PasswordGrant::class,
         // Enable Client Credentials Grant
-        Grant\ClientCredentialsGrant::class => [],
+        Grant\ClientCredentialsGrant::class,
         // Enable Authorization Code Grant (Requires AuthCodeRepository, UserRepository)
-        Grant\AuthCodeGrant::class => [
-            'repository' => 'auth_code', // Reference to the auth code repository
-            'refresh_token_repository' => 'refresh_token', // Reference to the refresh token repository
-        ],
+        Grant\AuthCodeGrant::class,
         // Enable Refresh Token Grant
-        Grant\RefreshTokenGrant::class => [
-            'repository' => 'refresh_token', // Reference to the refresh token repository
-        ],
+        Grant\RefreshTokenGrant::class,
         // Enable Implicit Grant (Not Recommended for Confidential Clients)
-        Grant\ImplicitGrant::class => [
-            'access_token_expire_in' => new \DateInterval('PT1H'),
-        ],
+        Grant\ImplicitGrant::class,
     ],
 
     // Define available scopes

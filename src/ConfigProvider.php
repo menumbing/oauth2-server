@@ -11,12 +11,35 @@ declare(strict_types=1);
  */
 namespace Menumbing\OAuth2\Server;
 
+use Hyperf\Contract\ConfigInterface;
+use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
+use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
+use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use Menumbing\OAuth2\Server\Bridge\Repository\ClientRepository;
+use Menumbing\OAuth2\Server\Bridge\Repository\ScopeRepository;
+use Menumbing\OAuth2\Server\Bridge\Repository\UserRepository;
+use Menumbing\OAuth2\Server\Factory\AuthorizationServerFactory;
+use Menumbing\Signature\Contract\ClientRepositoryInterface;
+use Psr\Container\ContainerInterface;
+
+use function Hyperf\Support\make;
+
 class ConfigProvider
 {
     public function __invoke(): array
     {
         return [
             'dependencies' => [
+                AccessTokenRepositoryInterface::class => $this->repositoryFactory('access_token'),
+                ClientRepositoryInterface::class => $this->repositoryFactory('client'),
+                AuthCodeRepositoryInterface::class => $this->repositoryFactory('auth_code'),
+                UserRepositoryInterface::class => $this->repositoryFactory('user'),
+                RefreshTokenRepositoryInterface::class => $this->repositoryFactory('refresh_token'),
+                ScopeRepositoryInterface::class => ScopeRepository::class,
+                AuthorizationServer::class => AuthorizationServerFactory::class,
             ],
             'commands' => [
             ],
@@ -66,5 +89,25 @@ class ConfigProvider
                 ],
             ],
         ];
+    }
+
+    protected function repositoryFactory(string $type): callable
+    {
+        $mapping = [
+            'client' => ClientRepository::class,
+            'user' => UserRepository::class,
+            'auth_code' => UserRepository::class,
+            'access_token' => UserRepository::class,
+            'refresh_token' => UserRepository::class,
+        ];
+
+        return function (ContainerInterface $container) use ($type, $mapping) {
+            $config = $container->get(ConfigInterface::class);
+
+            return make(
+                $mapping[$type],
+                ['modelRepository' => $config->get(sprintf('oauth2-server.repositories.%s', $type))]
+            );
+        };
     }
 }

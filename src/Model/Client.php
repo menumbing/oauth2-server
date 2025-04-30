@@ -41,6 +41,11 @@ class Client extends Model implements ClientModelInterface
         return $this->belongsTo(User::class);
     }
 
+    public function getIdentifier(): string
+    {
+        return $this->getKey();
+    }
+
     public function getName(): string
     {
         return $this->getAttribute('name');
