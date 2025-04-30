@@ -18,10 +18,14 @@ use League\OAuth2\Server\Repositories\AuthCodeRepositoryInterface;
 use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use League\OAuth2\Server\ResourceServer;
 use Menumbing\OAuth2\Server\Bridge\Repository\ClientRepository;
 use Menumbing\OAuth2\Server\Bridge\Repository\ScopeRepository;
 use Menumbing\OAuth2\Server\Bridge\Repository\UserRepository;
+use Menumbing\OAuth2\Server\Contract\TokenIssuerInterface;
 use Menumbing\OAuth2\Server\Factory\AuthorizationServerFactory;
+use Menumbing\OAuth2\Server\Factory\ResourceServerFactory;
+use Menumbing\OAuth2\Server\Listener\RegisterRoutesListener;
 use Menumbing\Signature\Contract\ClientRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -39,7 +43,14 @@ class ConfigProvider
                 UserRepositoryInterface::class => $this->repositoryFactory('user'),
                 RefreshTokenRepositoryInterface::class => $this->repositoryFactory('refresh_token'),
                 ScopeRepositoryInterface::class => ScopeRepository::class,
+
+                TokenIssuerInterface::class => TokenIssuer::class,
+
+                ResourceServer::class => ResourceServerFactory::class,
                 AuthorizationServer::class => AuthorizationServerFactory::class,
+            ],
+            'listeners' => [
+                RegisterRoutesListener::class => -1,
             ],
             'commands' => [
             ],

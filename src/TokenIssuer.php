@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Menumbing\OAuth2\Server;
 
-use HyperfExtension\Auth\Exceptions\AuthenticationException;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Menumbing\OAuth2\Server\Contract\ClientModelInterface;
 use Menumbing\OAuth2\Server\Contract\TokenIssuerInterface;
+use Menumbing\OAuth2\Server\Exception\AuthenticationException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

@@ -7,14 +7,16 @@ use function Hyperf\Support\env;
 
 return [
     // Private key path or content
-    'private_key' => BASE_PATH . '/storage/oauth/private.key',
+    'private_key' => env('OAUTH2_PRIVATE_KEY'),
+    // Public key path or content
+    'public_key' => env('OAUTH2_PUBLIC_KEY'),
     // Encryption key
-    'encryption_key' => env('OAUTH_ENCRYPTION_KEY', 'YourSecretEncryptionKey'), // Use a secure key, ideally from .env
+    'encryption_key' => env('OAUTH2_ENCRYPTION_KEY'), // Use a secure key, ideally from .env
     // Client secret in the database should be hashes or not
-    'hashes_client_secret' => env('OAUTH_HASHES_CLIENT_SECRET', false),
+    'hashes_client_secret' => env('OAUTH2_HASHES_CLIENT_SECRET', false),
 
     // Find a user with a specific key
-    'user_find_by' => env('OAUTH_USER_FIND_BY', 'email'),
+    'user_find_by' => env('OAUTH2_USER_FIND_BY', 'email'),
 
     // Access token lifetime (e.g., 1 hour)
     'access_token_expire_in' => new \DateInterval('PT1H'),
@@ -23,9 +25,14 @@ return [
     // Auth code lifetime (e.g., 10 minutes)
     'auth_code_expire_in' => new \DateInterval('PT10M'),
 
+    'route' => [
+        'server' => 'http',
+        'path' => '/oauth/token',
+    ],
+
     // Database connection for storage of auth code, access token and refresh token
     'database' => [
-        'connection' => env('OAUTH_DB_CONNECTION', 'default'),
+        'connection' => env('OAUTH2_DB_CONNECTION', 'default'),
     ],
 
     'repositories' => [
