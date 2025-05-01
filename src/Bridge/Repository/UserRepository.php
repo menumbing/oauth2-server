@@ -31,6 +31,8 @@ class UserRepository implements UserRepositoryInterface
             return null;
         }
 
+        var_dump($user);
+
         if (!$this->hasher->check($password, $user->getPassword())) {
             return null;
         }

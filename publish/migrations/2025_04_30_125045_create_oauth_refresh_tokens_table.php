@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('access_token_id', 100)->index();
             $table->boolean('revoked')->index();
             $table->dateTime('expires_at')->nullable()->index();
+            $table->timestamps();
 
             $table->foreign('access_token_id')->references('id')->on('oauth_access_tokens');
         });

@@ -12,7 +12,7 @@ use Menumbing\Orm\Relation\BelongsTo;
  */
 class RefreshToken extends Token implements TokenModelInterface
 {
-    public null|string $table = 'oauth_access_tokens';
+    public null|string $table = 'oauth_refresh_tokens';
 
     public function accessToken(): BelongsTo
     {

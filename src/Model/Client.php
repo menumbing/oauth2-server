@@ -70,7 +70,7 @@ class Client extends Model implements ClientModelInterface
     {
         $this->plainSecret = $value;
 
-        if (config('oauth2-server.hashes_client_secret')) {
+        if (!config('oauth2-server.hashes_client_secret')) {
             $this->attributes['secret'] = $value;
 
             return;
@@ -122,7 +122,7 @@ class Client extends Model implements ClientModelInterface
             'password' => $this->isPasswordClient(),
             'client_credentials' => !empty($this->getSecret()) && !$this->isPasswordClient(),
             'implicit' => !$this->isConfidential(),
-            default => false,
+            default => true,
         };
     }
 }
