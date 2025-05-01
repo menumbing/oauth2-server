@@ -33,7 +33,7 @@ final class RegisterRoutesListener implements ListenerInterface
     {
         $this->getRouter()->addRoute(
             ['POST'],
-            $this->config->get('oauth2-server.route.path'),
+            $this->config->get('oauth2-server.route.path', '/oauth/token'),
             [IssueTokenController::class, 'issueToken']
         );
     }
