@@ -9,6 +9,8 @@ use Menumbing\OAuth2\Server\Contract\ClientModelInterface;
 use Menumbing\Orm\Model;
 use Menumbing\Orm\Relation\BelongsTo;
 
+use function Hyperf\Config\config;
+
 /**
  * @property User $user
  *
@@ -29,7 +31,6 @@ class Client extends Model implements ClientModelInterface
         'password_client',
         'revoked',
         'allow_scopes',
-        'implicit',
     ];
 
     protected array $hidden = [
@@ -41,8 +42,9 @@ class Client extends Model implements ClientModelInterface
         'password_client' => 'bool',
         'revoked' => 'bool',
         'allow_scopes' => 'array',
-        'implicit' => 'bool',
     ];
+
+    protected ?string $plainSecret = null;
 
     public function user(): BelongsTo
     {
@@ -64,9 +66,27 @@ class Client extends Model implements ClientModelInterface
         return $this->getAttribute('redirect') ?? '';
     }
 
+    public function setSecretAttribute($value): void
+    {
+        $this->plainSecret = $value;
+
+        if (config('oauth2-server.hashes_client_secret')) {
+            $this->attributes['secret'] = $value;
+
+            return;
+        }
+
+        $this->attributes['secret'] = password_hash($value, PASSWORD_BCRYPT);
+    }
+
     public function getSecret(): string
     {
         return $this->getAttribute('secret');
+    }
+
+    public function getPlainSecret(): ?string
+    {
+        return $this->plainSecret;
     }
 
     public function isFirstParty(): bool
@@ -94,19 +114,14 @@ class Client extends Model implements ClientModelInterface
         return !empty($this->getSecret());
     }
 
-    public function isImplicit(): bool
-    {
-        return $this->getAttribute('implicit');
-    }
-
     public function handlesGrant(?string $grantType): bool
     {
         return match ($grantType) {
-            'authorization_code' => !($this->isPersonalAccessClient() || $this->isPasswordClient()),
-            'personal_access' => $this->isPersonalAccessClient() && !empty($this->getSecret()),
+            'authorization_code' => !($this->isPersonalAccessClient() || $this->isPasswordClient()) && $this->isConfidential(),
+            'personal_access' => $this->isPersonalAccessClient() && $this->isConfidential(),
             'password' => $this->isPasswordClient(),
             'client_credentials' => !empty($this->getSecret()) && !$this->isPasswordClient(),
-            'implicit' => $this->isImplicit(),
+            'implicit' => !$this->isConfidential(),
             default => false,
         };
     }

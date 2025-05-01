@@ -25,6 +25,7 @@ use Menumbing\OAuth2\Server\Bridge\Repository\ClientRepository;
 use Menumbing\OAuth2\Server\Bridge\Repository\RefreshTokenRepository;
 use Menumbing\OAuth2\Server\Bridge\Repository\ScopeRepository;
 use Menumbing\OAuth2\Server\Bridge\Repository\UserRepository;
+use Menumbing\OAuth2\Server\Console\GenerateClientCommand;
 use Menumbing\OAuth2\Server\Contract\TokenIssuerInterface;
 use Menumbing\OAuth2\Server\Factory\AuthorizationServerFactory;
 use Menumbing\OAuth2\Server\Factory\ResourceServerFactory;
@@ -56,6 +57,7 @@ class ConfigProvider
                 RegisterRoutesListener::class => -1,
             ],
             'commands' => [
+                GenerateClientCommand::class,
             ],
             'publish' => [
                 [

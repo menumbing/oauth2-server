@@ -19,7 +19,9 @@ class AccessToken implements AccessTokenEntityInterface
 
     public function __construct($userIdentifier, array $scopes, ClientEntityInterface $client)
     {
-        $this->setUserIdentifier($userIdentifier);
+        if (!empty($userIdentifier)) {
+            $this->setUserIdentifier($userIdentifier);
+        }
 
         foreach ($scopes as $scope) {
             $this->addScope($scope);

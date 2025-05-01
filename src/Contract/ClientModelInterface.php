@@ -15,6 +15,8 @@ interface ClientModelInterface
 
     public function getRedirect(): string;
 
+    public function getPlainSecret(): ?string;
+
     public function getSecret(): ?string;
 
     public function isFirstParty(): bool;
@@ -26,8 +28,6 @@ interface ClientModelInterface
     public function isPasswordClient(): bool;
 
     public function isConfidential(): bool;
-
-    public function isImplicit(): bool;
 
     public function handlesGrant(?string $grantType): bool;
 }
