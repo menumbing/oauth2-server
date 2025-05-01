@@ -19,7 +19,10 @@ use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
+use Menumbing\OAuth2\Server\Bridge\Repository\AccessTokenRepository;
+use Menumbing\OAuth2\Server\Bridge\Repository\AuthCodeRepository;
 use Menumbing\OAuth2\Server\Bridge\Repository\ClientRepository;
+use Menumbing\OAuth2\Server\Bridge\Repository\RefreshTokenRepository;
 use Menumbing\OAuth2\Server\Bridge\Repository\ScopeRepository;
 use Menumbing\OAuth2\Server\Bridge\Repository\UserRepository;
 use Menumbing\OAuth2\Server\Contract\TokenIssuerInterface;
@@ -104,20 +107,21 @@ class ConfigProvider
 
     protected function repositoryFactory(string $type): callable
     {
-        $mapping = [
-            'client' => ClientRepository::class,
-            'user' => UserRepository::class,
-            'auth_code' => UserRepository::class,
-            'access_token' => UserRepository::class,
-            'refresh_token' => UserRepository::class,
-        ];
+        return function (ContainerInterface $container) use ($type) {
+            $mapping = [
+                'client' => ClientRepository::class,
+                'user' => UserRepository::class,
+                'auth_code' => AuthCodeRepository::class,
+                'access_token' => AccessTokenRepository::class,
+                'refresh_token' => RefreshTokenRepository::class,
+            ];
 
-        return function (ContainerInterface $container) use ($type, $mapping) {
             $config = $container->get(ConfigInterface::class);
+            $repositoryClass = $config->get('oauth2-server.repositories.' . $type);
 
             return make(
                 $mapping[$type],
-                ['modelRepository' => $config->get(sprintf('oauth2-server.repositories.%s', $type))]
+                ['modelRepository' => $container->get($repositoryClass)]
             );
         };
     }

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Menumbing\OAuth2\Server;
 
+use Hyperf\HttpServer\Contract\ResponseInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Menumbing\OAuth2\Server\Contract\ClientModelInterface;
 use Menumbing\OAuth2\Server\Contract\TokenIssuerInterface;
 use Menumbing\OAuth2\Server\Exception\AuthenticationException;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -24,7 +25,7 @@ final class TokenIssuer implements TokenIssuerInterface
     ) {
     }
 
-    public function byUser(mixed $user, ClientModelInterface $client, array $scopes = []): ResponseInterface
+    public function byUser(mixed $user, ClientModelInterface $client, array $scopes = []): PsrResponseInterface
     {
         $request = $this->request->withParsedBody([
             'grant_type'    => 'user',
@@ -38,7 +39,7 @@ final class TokenIssuer implements TokenIssuerInterface
         return $this->issueToken($request, $this->response);
     }
 
-    public function refreshToken(string $refreshToken, ClientModelInterface $client, array $scopes = []): ResponseInterface
+    public function refreshToken(string $refreshToken, ClientModelInterface $client, array $scopes = []): PsrResponseInterface
     {
         $request = $this->request->withParsedBody([
             'grant_type'    => 'refresh_token',
@@ -51,7 +52,7 @@ final class TokenIssuer implements TokenIssuerInterface
         return $this->issueToken($request, $this->response);
     }
 
-    public function issueToken(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function issueToken(ServerRequestInterface $request, PsrResponseInterface $response): PsrResponseInterface
     {
         try {
             return $this->authorizationServer->respondToAccessTokenRequest($request, $response);

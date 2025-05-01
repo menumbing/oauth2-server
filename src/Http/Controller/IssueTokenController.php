@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Menumbing\OAuth2\Server\Http\Controller;
 
+use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Menumbing\OAuth2\Server\Contract\TokenIssuerInterface;
@@ -13,7 +14,10 @@ use Menumbing\OAuth2\Server\Contract\TokenIssuerInterface;
  */
 class IssueTokenController
 {
-    public function __construct(protected TokenIssuerInterface $tokenIssuer)
+    #[Inject]
+    protected TokenIssuerInterface $tokenIssuer;
+
+    public function __construct()
     {
     }
 
