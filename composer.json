@@ -49,6 +49,9 @@
     "extra": {
         "hyperf": {
             "config": "Menumbing\\OAuth2\\Server\\ConfigProvider"
+        },
+        "branch-alias": {
+            "dev-master": "1.x-dev"
         }
     }
 }
