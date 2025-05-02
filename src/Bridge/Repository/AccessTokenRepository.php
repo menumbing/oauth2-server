@@ -10,7 +10,7 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use Menumbing\OAuth2\Server\Bridge\Entity\AccessToken;
 use Menumbing\OAuth2\Server\Bridge\FormatScopesForStorage;
-use Menumbing\OAuth2\Server\Contract\AccessTokenModelRepositoryInterface;
+use Menumbing\OAuth2\Server\Contract\TokenModelRepositoryInterface;
 use Menumbing\OAuth2\Server\Event\AccessTokenCreated;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
@@ -22,7 +22,7 @@ class AccessTokenRepository implements AccessTokenRepositoryInterface
     use FormatScopesForStorage;
 
     public function __construct(
-        protected AccessTokenModelRepositoryInterface $modelRepository,
+        protected TokenModelRepositoryInterface $modelRepository,
         protected EventDispatcherInterface $events,
     ) {
     }

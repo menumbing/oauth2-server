@@ -1,6 +1,7 @@
 <?php
 
 use League\OAuth2\Server\Grant;
+use Menumbing\OAuth2\Server\Http\Controller\IssueTokenController;
 use Menumbing\OAuth2\Server\Repository;
 
 use function Hyperf\Support\env;
@@ -31,6 +32,8 @@ return [
     'route' => [
         'server' => 'http',
         'path' => '/oauth/token',
+        'handler' => [IssueTokenController::class, 'issueToken'],
+        'middleware' => [],
     ],
 
     // Database connection for storage of auth code, access token and refresh token

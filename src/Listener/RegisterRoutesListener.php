@@ -31,11 +31,11 @@ final class RegisterRoutesListener implements ListenerInterface
 
     public function process(object $event): void
     {
-        $this->getRouter()->addRoute(
-            ['POST'],
-            $this->config->get('oauth2-server.route.path', '/oauth/token'),
-            [IssueTokenController::class, 'issueToken']
-        );
+        $path = $this->config->get('oauth2-server.route.path', '/oauth/token');
+        $middleware = ['middleware' => $this->config->get('oauth2-server.route.middleware', [])];
+        $handler = $this->config->get('oauth2-server.route.handler', [IssueTokenController::class, 'issueToken']);
+
+        $this->getRouter()->addRoute(['POST'], $path, $handler, ['middleware' => $middleware]);
     }
 
     private function getRouter(): RouteCollector

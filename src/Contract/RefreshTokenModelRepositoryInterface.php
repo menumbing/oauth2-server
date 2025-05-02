@@ -7,6 +7,6 @@ namespace Menumbing\OAuth2\Server\Contract;
 /**
  * @author  Iqbal Maulana <iq.bluejack@gmail.com>
  */
-interface RefreshTokenModelRepositoryInterface extends AccessTokenModelRepositoryInterface
+interface RefreshTokenModelRepositoryInterface extends TokenModelRepositoryInterface
 {
 }
