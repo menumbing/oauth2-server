@@ -16,7 +16,7 @@ return [
     'hashes_client_secret' => env('OAUTH2_HASHES_CLIENT_SECRET', false),
 
     // Find a user with a specific key
-    'user_find_by' => env('OAUTH2_USER_FIND_BY', 'email'),
+    'user_find_by' => 'email',
 
     // Access token lifetime (e.g., 1 hour)
     'access_token_expire_in' => new \DateInterval('PT1H'),
@@ -24,6 +24,9 @@ return [
     'refresh_token_expire_in' => new \DateInterval('P1M'),
     // Auth code lifetime (e.g., 10 minutes)
     'auth_code_expire_in' => new \DateInterval('PT10M'),
+
+    // Custom response type that should implement ResponseTypeInterface
+    'response_type' => null,
 
     'route' => [
         'server' => 'http',

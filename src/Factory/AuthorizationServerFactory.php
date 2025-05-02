@@ -12,6 +12,7 @@ use League\OAuth2\Server\Grant\GrantTypeInterface;
 use League\OAuth2\Server\Grant\ImplicitGrant;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
+use League\OAuth2\Server\ResponseTypes\ResponseTypeInterface;
 use Menumbing\Signature\Contract\ClientRepositoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -67,6 +68,7 @@ class AuthorizationServerFactory
             scopeRepository: $this->container->get(ScopeRepositoryInterface::class),
             privateKey: $this->makeKey(),
             encryptionKey: $this->config->get('oauth2-server.encryption_key'),
+            responseType: $this->makeResponseType(),
         );
     }
 
@@ -104,5 +106,14 @@ class AuthorizationServerFactory
         }
 
         return new CryptKey($key, null, false);
+    }
+
+    protected function makeResponseType(): ?ResponseTypeInterface
+    {
+        if (null !== $responseType = $this->config->get('oauth2-server.response_type')) {
+            return make($responseType);
+        }
+
+        return null;
     }
 }
