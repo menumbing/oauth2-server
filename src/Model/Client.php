@@ -79,7 +79,7 @@ class Client extends Model implements ClientModelInterface
         $this->attributes['secret'] = password_hash($value, PASSWORD_BCRYPT);
     }
 
-    public function getSecret(): string
+    public function getSecret(): ?string
     {
         return $this->getAttribute('secret');
     }
