@@ -32,9 +32,7 @@ The following RFCs are implemented:
 ```
 composer req menumbing/oauth2-server
 
-php bin/hyperf.php vendor:publish menumbing/oauth2-server
-
-php bin/hyperf.php migrate
+php bin/hyperf.php install:oauth2
 
 php bin/hyperf.php start
 ```

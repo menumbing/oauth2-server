@@ -25,7 +25,8 @@
         "menumbing/orm": "^1.0",
         "menumbing/hashing": "^1.0",
         "league/oauth2-server": "^9.2",
-        "ramsey/uuid": "^4.7"
+        "ramsey/uuid": "^4.7",
+        "phpseclib/phpseclib": "^3.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",

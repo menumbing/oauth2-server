@@ -9,6 +9,9 @@ use Hyperf\Contract\ConfigInterface;
 use Menumbing\OAuth2\Server\Contract\AuthCodeModelRepositoryInterface;
 use Menumbing\OAuth2\Server\Contract\RefreshTokenModelRepositoryInterface;
 use Menumbing\OAuth2\Server\Contract\TokenModelRepositoryInterface;
+use Menumbing\OAuth2\Server\Repository\AccessTokenModelRepository;
+use Menumbing\OAuth2\Server\Repository\AuthCodeModelRepository;
+use Menumbing\OAuth2\Server\Repository\RefreshTokenModelRepository;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -33,9 +36,9 @@ class PurgeTokenCommand extends Command
         parent::__construct();
 
         $this->config = $container->get(ConfigInterface::class);
-        $this->accessTokenRepository = $this->getRepository('access_token');
-        $this->refreshTokenRepository = $this->getRepository('refresh_token');
-        $this->authCodeRepository = $this->getRepository('auth_code');
+        $this->accessTokenRepository = $this->getRepository('access_token', AccessTokenModelRepository::class);
+        $this->refreshTokenRepository = $this->getRepository('refresh_token', RefreshTokenModelRepository::class);
+        $this->authCodeRepository = $this->getRepository('auth_code', AuthCodeModelRepository::class);
     }
 
     public function handle(): void
@@ -47,10 +50,10 @@ class PurgeTokenCommand extends Command
         $this->info('All revoked and expired token that more than 7 days have been purged.');
     }
 
-    protected function getRepository(string $type): mixed
+    protected function getRepository(string $type, string $default): mixed
     {
         return $this->container->get(
-            $this->config->get(sprintf('oauth2-server.repositories.%s', $type))
+            $this->config->get(sprintf('oauth2-server.repositories.%s', $type), $default)
         );
     }
 }

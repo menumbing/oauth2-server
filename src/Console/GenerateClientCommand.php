@@ -9,6 +9,7 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Stringable\Str;
 use Menumbing\OAuth2\Server\Contract\ClientModelInterface;
 use Menumbing\OAuth2\Server\Contract\ClientModelRepositoryInterface;
+use Menumbing\OAuth2\Server\Repository\ClientModelRepository;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -36,7 +37,7 @@ class GenerateClientCommand extends Command
         $this->config = $this->container->get(ConfigInterface::class);
 
         $this->clientModelRepository = $this->container->get(
-            $this->config->get('oauth2-server.repositories.client')
+            $this->config->get('oauth2-server.repositories.client', ClientModelRepository::class)
         );
     }
 
