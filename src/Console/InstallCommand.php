@@ -19,6 +19,9 @@ class InstallCommand extends Command
 
     public function handle(): void
     {
+        $this->call('vendor:publish', ['package' => 'hyperf-extension/hashing']);
+        $this->call('vendor:publish', ['package' => 'menumbing/auth']);
+
         $this->call('gen:oauth2-keys', [
             '--force'  => $this->option('force'),
             '--length' => $this->option('length'),
