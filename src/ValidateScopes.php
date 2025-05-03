@@ -27,7 +27,7 @@ trait ValidateScopes
     protected function validateScopes(ServerRequestInterface $request): ?ServerRequestInterface
     {
         $request = $this->validateRequest($request);
-        $scopes = $this->getOption($request, 'scope', []);
+        $scopes = (array) $this->getOption($request, 'scope', []);
         $tokenScopes = $this->tokenScopes;
 
         if (empty($scopes)) {
@@ -39,7 +39,7 @@ trait ValidateScopes
         }
 
         foreach ($tokenScopes as $scope) {
-            if ($this->can($tokenScopes, $scope)) {
+            if ($this->can($scopes, $scope)) {
                 return $request;
             }
         }

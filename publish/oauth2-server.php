@@ -1,9 +1,11 @@
 <?php
 
 use League\OAuth2\Server\Grant;
+use Menumbing\OAuth2\Server\Http\Controller\GetAccessTokenInfoController;
 use Menumbing\OAuth2\Server\Http\Controller\GetScopeListController;
 use Menumbing\OAuth2\Server\Http\Controller\GetUserInfoController;
 use Menumbing\OAuth2\Server\Http\Controller\IssueTokenController;
+use Menumbing\OAuth2\Server\Http\Middleware\CheckClientCredentialsForAnyScope;
 use Menumbing\OAuth2\Server\Repository;
 
 use function Hyperf\Support\env;
@@ -57,6 +59,15 @@ return [
                 'middleware' => [],
                 'guard' => 'oauth2',
             ]
+        ],
+        'token_validity' => [
+            'server' => 'http',
+            'path' => '/oauth/tokens/{tokenId}/validity',
+            'handler' => [GetAccessTokenInfoController::class, 'isRevoked'],
+            'options' => [
+                'middleware' => [CheckClientCredentialsForAnyScope::class],
+                'scope' => 'check-token-validity',
+            ]
         ]
     ],
 
@@ -90,6 +101,7 @@ return [
     'scopes' => [
         'basic' => 'Basic user information.',
         'email' => 'User email address.',
+        'check-token-validity' => 'Check if the access token is revoked.',
     ],
 
     // Define user info fields based on scope

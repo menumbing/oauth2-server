@@ -27,8 +27,12 @@ class GetUserInfoController
     protected AuthManagerInterface $auth;
 
     #[AuthUser(for: 'user')]
-    public function infoMe(Model $user, ServerRequestInterface $request): array
+    public function infoMe(?Model $user, ServerRequestInterface $request): array
     {
+        if (null === $user) {
+            throw new \LogicException('This credentials does not have user.', 404);
+        }
+
         $data = ['id' => $user->id, 'status' => $user->status];
         $items = collect($user->toArray());
         $tokenScopes = $this->guard($request)->tokenScopes();
