@@ -21,7 +21,7 @@ class ScopeRepository implements ScopeRepositoryInterface
 
     public function __construct(ConfigInterface $config)
     {
-        $this->scopes = $config->get('oauth2.scopes', []);
+        $this->scopes = $config->get('oauth2-server.scopes', []);
     }
 
     public function getScopeEntityByIdentifier(string $identifier): ?ScopeEntityInterface

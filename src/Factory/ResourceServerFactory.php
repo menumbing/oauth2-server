@@ -7,6 +7,7 @@ namespace Menumbing\OAuth2\Server\Factory;
 use Hyperf\Contract\ConfigInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 use League\OAuth2\Server\ResourceServer;
+use Menumbing\OAuth2\Server\MakeCryptKey;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -14,6 +15,8 @@ use Psr\Container\ContainerInterface;
  */
 class ResourceServerFactory
 {
+    use MakeCryptKey;
+
     protected ConfigInterface $config;
 
     public function __construct(protected ContainerInterface $container)
@@ -25,7 +28,7 @@ class ResourceServerFactory
     {
         return new ResourceServer(
             $this->container->get(AccessTokenRepositoryInterface::class),
-            $this->config->get('oauth2-server.public_key'),
+            $this->makeKey($this->config->get('oauth2-server.public_key')),
         );
     }
 }

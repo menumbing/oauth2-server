@@ -31,11 +31,23 @@ final class RegisterRoutesListener implements ListenerInterface
 
     public function process(object $event): void
     {
-        $path = $this->config->get('oauth2-server.route.path', '/oauth/token');
-        $middleware = $this->config->get('oauth2-server.route.middleware', []);
-        $handler = $this->config->get('oauth2-server.route.handler', [IssueTokenController::class, 'issueToken']);
+        $issueTokenRoute = $this->config->get('oauth2-server.routes.issue_token', []);
 
-        $this->getRouter()->addRoute(['POST'], $path, $handler, ['middleware' => $middleware]);
+        $this->getRouter()->addRoute(
+            httpMethod: 'POST',
+            route: $issueTokenRoute['path'] ?? '/oauth/token',
+            handler: $issueTokenRoute['handler'] ?? [IssueTokenController::class, 'issueToken'],
+            options: $isueTokenRoute['options'] ?? [],
+        );
+
+        $this->addRouteIfExist('GET', 'user_info');
+    }
+
+    private function addRouteIfExist(string $httpMethod, string $routeKey): void
+    {
+        if (!empty($route = $this->config->get('oauth2-server.routes.' . $routeKey))) {
+            $this->getRouter()->addRoute($httpMethod, $route['path'], $route['handler'], $route['options'] ?? []);
+        }
     }
 
     private function getRouter(): RouteCollector

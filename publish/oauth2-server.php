@@ -1,6 +1,7 @@
 <?php
 
 use League\OAuth2\Server\Grant;
+use Menumbing\OAuth2\Server\Http\Controller\GetUserInfoController;
 use Menumbing\OAuth2\Server\Http\Controller\IssueTokenController;
 use Menumbing\OAuth2\Server\Repository;
 
@@ -29,11 +30,24 @@ return [
     // Custom response type that should implement ResponseTypeInterface
     'response_type' => null,
 
-    'route' => [
-        'server' => 'http',
-        'path' => '/oauth/token',
-        'handler' => [IssueTokenController::class, 'issueToken'],
-        'middleware' => [],
+    'routes' => [
+        'issue_token' => [
+            'server' => 'http',
+            'path' => '/oauth/token',
+            'handler' => [IssueTokenController::class, 'issueToken'],
+            'options' => [
+                'middleware' => [],
+            ],
+        ],
+        'user_info' => [
+            'server' => 'http',
+            'path' => '/oauth/me',
+            'handler' => [GetUserInfoController::class, 'infoMe'],
+            'options' => [
+                'middleware' => [],
+                'guard' => 'oauth2',
+            ]
+        ]
     ],
 
     // Database connection for storage of auth code, access token and refresh token
@@ -63,5 +77,14 @@ return [
     ],
 
     // Define available scopes
-    'scopes' => [],
+    'scopes' => [
+        'basic' => 'Basic user information.',
+        'email' => 'User email address.',
+    ],
+
+    // Define user info fields based on scope
+    'user_info_fields' => [
+        'basic' => 'name, created_at, updated_at',
+        'email' => 'email',
+    ]
 ];

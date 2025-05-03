@@ -38,7 +38,7 @@ class AccessToken extends Token implements TokenModelInterface
      */
     public function can(string $scope): bool
     {
-        $scopes = $this->getAttribute('scopes');
+        $scopes = $this->getAttribute('scopes') ?? [];
 
         if (in_array('*', $scopes)) {
             return true;

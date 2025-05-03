@@ -5,24 +5,22 @@ declare(strict_types=1);
 namespace Menumbing\OAuth2\Server\Model;
 
 use Hyperf\Database\Model\Concerns\HasUuids;
+use HyperfExtension\Auth\Authenticatable;
+use HyperfExtension\Auth\Contracts\AuthenticatableInterface;
 use Menumbing\Hashing\Cast\Hash;
 use Menumbing\OAuth2\Server\Constant\UserStatus;
 use Menumbing\OAuth2\Server\Contract\UserModelInterface;
+use Menumbing\OAuth2\Server\HasApiTokens;
 use Menumbing\Orm\Model;
 
 /**
  * @author  Iqbal Maulana <iq.bluejack@gmail.com>
  */
-class User extends Model implements UserModelInterface
+class User extends Model implements UserModelInterface, AuthenticatableInterface
 {
-    use HasUuids;
+    use HasUuids, Authenticatable, HasApiTokens;
 
-    protected array $fillable = [
-        'name',
-        'email',
-        'password',
-        'status',
-    ];
+    protected array $guarded = [];
 
     protected array $hidden = [
         'password',
