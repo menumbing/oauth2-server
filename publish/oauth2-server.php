@@ -1,6 +1,7 @@
 <?php
 
 use League\OAuth2\Server\Grant;
+use Menumbing\OAuth2\Server\Http\Controller\GetScopeListController;
 use Menumbing\OAuth2\Server\Http\Controller\GetUserInfoController;
 use Menumbing\OAuth2\Server\Http\Controller\IssueTokenController;
 use Menumbing\OAuth2\Server\Repository;
@@ -43,6 +44,15 @@ return [
             'server' => 'http',
             'path' => '/oauth/me',
             'handler' => [GetUserInfoController::class, 'infoMe'],
+            'options' => [
+                'middleware' => [],
+                'guard' => 'oauth2',
+            ]
+        ],
+        'scope_list' => [
+            'server' => 'http',
+            'path' => '/oauth/scopes',
+            'handler' => [GetScopeListController::class, 'index'],
             'options' => [
                 'middleware' => [],
                 'guard' => 'oauth2',

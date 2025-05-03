@@ -41,6 +41,7 @@ final class RegisterRoutesListener implements ListenerInterface
         );
 
         $this->addRouteIfExist('GET', 'user_info');
+        $this->addRouteIfExist('GET', 'scope_list');
     }
 
     private function addRouteIfExist(string $httpMethod, string $routeKey): void
