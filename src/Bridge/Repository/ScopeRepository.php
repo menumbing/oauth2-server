@@ -9,6 +9,11 @@ use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use Menumbing\OAuth2\Server\Bridge\Entity\Scope;
+use Menumbing\OAuth2\Server\Contract\ClientModelInterface;
+use Menumbing\OAuth2\Server\Contract\ClientModelRepositoryInterface;
+use Menumbing\OAuth2\Server\Exception\ForbiddenScopeException;
+use Menumbing\OAuth2\Server\Repository\ClientModelRepository;
+use Psr\Container\ContainerInterface;
 
 use function Hyperf\Collection\collect;
 
@@ -19,9 +24,14 @@ class ScopeRepository implements ScopeRepositoryInterface
 {
     protected array $scopes = [];
 
-    public function __construct(ConfigInterface $config)
+    protected ClientModelRepositoryInterface $clientModelRepository;
+
+    public function __construct(ConfigInterface $config, ContainerInterface $container)
     {
         $this->scopes = $config->get('oauth2-server.scopes', []);
+        $this->clientModelRepository = $container->get(
+            $config->get('oauth2-server.repositories.client', ClientModelRepository::class),
+        );
     }
 
     public function getAll(): array
@@ -44,6 +54,8 @@ class ScopeRepository implements ScopeRepositoryInterface
 
     public function finalizeScopes(array $scopes, string $grantType, ClientEntityInterface $clientEntity, ?string $userIdentifier = null, ?string $authCodeId = null): array
     {
+        $client = $this->clientModelRepository->findActive($clientEntity->getIdentifier());
+
         if (! in_array($grantType, ['password', 'personal_access', 'client_credentials'])) {
             $scopes = collect($scopes)
                 ->reject(fn(Scope $scope) => '*' === trim($scope->getIdentifier()))
@@ -52,13 +64,19 @@ class ScopeRepository implements ScopeRepositoryInterface
         }
 
         return collect($scopes)
-            ->filter(fn(Scope $scope) => $this->hasScope($scope->getIdentifier()))
+            ->filter(fn(Scope $scope) => $this->hasScope($scope->getIdentifier(), $client))
             ->values()
             ->toArray();
     }
 
-    public function hasScope(string $identifier): bool
+    public function hasScope(string $identifier, ?ClientModelInterface $client = null): bool
     {
+        if (null !== $client) {
+            if ($client->hasScopeControls() && ($client->isForbid($identifier) || !$client->isAllow($identifier))) {
+                throw new ForbiddenScopeException($identifier);
+            }
+        }
+
         return array_key_exists($identifier, $this->scopes);
     }
 }

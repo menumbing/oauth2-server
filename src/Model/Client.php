@@ -22,16 +22,7 @@ class Client extends Model implements ClientModelInterface
 
     protected null|string $table = 'oauth_clients';
 
-    protected array $fillable = [
-        'user_id',
-        'name',
-        'secret',
-        'redirect',
-        'personal_access_client',
-        'password_client',
-        'revoked',
-        'allow_scopes',
-    ];
+    protected array $guarded = [];
 
     protected array $hidden = [
         'secret',
@@ -41,7 +32,8 @@ class Client extends Model implements ClientModelInterface
         'personal_access_client' => 'bool',
         'password_client' => 'bool',
         'revoked' => 'bool',
-        'allow_scopes' => 'array',
+        'allowed_scopes' => 'array',
+        'forbid_scopes' => 'array',
     ];
 
     protected ?string $plainSecret = null;
@@ -124,5 +116,28 @@ class Client extends Model implements ClientModelInterface
             'implicit' => !$this->isConfidential(),
             default => true,
         };
+    }
+
+    public function hasScopeControls(): bool
+    {
+        return !empty($this->getAttribute('allowed_scopes')) || !empty($this->getAttribute('forbid_scopes'));
+    }
+
+    public function isAllow(string $scope): bool
+    {
+        if (empty($allowedScopes = $this->getAttribute('allowed_scopes') ?? [])) {
+            return true;
+        }
+
+        return in_array($scope, $allowedScopes);
+    }
+
+    public function isForbid(string $scope): bool
+    {
+        if (empty($forbidScopes = $this->getAttribute('forbid_scopes') ?? [])) {
+            return false;
+        }
+
+        return in_array($scope, $forbidScopes);
     }
 }

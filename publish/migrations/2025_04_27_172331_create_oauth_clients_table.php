@@ -20,6 +20,8 @@ return new class extends Migration
             $table->boolean('personal_access_client');
             $table->boolean('password_client');
             $table->boolean('revoked')->index();
+            $table->text('allowed_scopes')->nullable();
+            $table->text('forbid_scopes')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

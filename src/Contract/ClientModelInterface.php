@@ -30,4 +30,10 @@ interface ClientModelInterface
     public function isConfidential(): bool;
 
     public function handlesGrant(?string $grantType): bool;
+
+    public function hasScopeControls(): bool;
+
+    public function isAllow(string $scope): bool;
+
+    public function isForbid(string $scope): bool;
 }
