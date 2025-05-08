@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Menumbing\OAuth2\Server\Guard;
 
 use Hyperf\Contract\ConfigInterface;
+use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Stringable\Str;
 use HyperfExtension\Auth\Contracts\AuthenticatableInterface;
 use HyperfExtension\Auth\Contracts\UserProviderInterface;
 use HyperfExtension\Auth\GuardHelpers;
@@ -34,7 +36,7 @@ class OAuth2Guard implements OAuth2GuardInterface
     protected array $tokenScopes = [];
 
     public function __construct(
-        protected ServerRequestInterface $request,
+        protected RequestInterface $request,
         UserProviderInterface $provider,
         ResourceServer $server,
         protected ContainerInterface $container,
@@ -54,7 +56,14 @@ class OAuth2Guard implements OAuth2GuardInterface
             return $this->user;
         }
 
-        $user = $this->authenticateWithBearerToken($this->request);
+        $user = null;
+
+        if ($this->bearerToken($this->request)) {
+            $user = $this->authenticateWithBearerToken($this->request);
+        } elseif ($token = $this->request->cookie($this->config->get('oauth2-server.cookie.name', 'oauth2_token'))) {
+            $request = $this->request->withHeader('Authorization', 'Bearer ' . $token);
+            $user = $this->authenticateWithBearerToken($request);;
+        }
 
         return $this->user = $user;
     }
@@ -128,5 +137,15 @@ class OAuth2Guard implements OAuth2GuardInterface
     public function tokenScopes(): array
     {
         return $this->tokenScopes;
+    }
+
+    protected function bearerToken(RequestInterface $request): ?string
+    {
+        $header = $request->getHeaderLine('Authorization');
+        if (Str::startsWith($header, 'Bearer ')) {
+            return Str::substr($header, 7);
+        }
+
+        return null;
     }
 }
