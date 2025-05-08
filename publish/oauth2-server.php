@@ -72,7 +72,7 @@ return [
             'handler' => [GetAccessTokenInfoController::class, 'isRevoked'],
             'options' => [
                 'middleware' => [CheckClientCredentialsForAnyScope::class],
-                'scope' => 'check-token-validity',
+                'scope' => 'token:check_validity',
             ]
         ]
     ],
@@ -107,7 +107,7 @@ return [
     'scopes' => [
         'basic' => 'Basic user information.',
         'email' => 'User email address.',
-        'check-token-validity' => 'Check if the access token is revoked.',
+        'token:check_validity' => 'Check if the access token is revoked.',
     ],
 
     // Define user info fields based on scope
