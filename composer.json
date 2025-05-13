@@ -22,6 +22,7 @@
         "hyperf/di": "^3.1",
         "hyperf/event": "^3.1",
         "hyperf/command": "^3.1",
+        "hyperf/cache": "^3.1",
         "menumbing/orm": "^1.0",
         "menumbing/hashing": "^1.0",
         "menumbing/auth": "^1.0",

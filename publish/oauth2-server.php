@@ -82,6 +82,13 @@ return [
         'connection' => env('OAUTH2_DB_CONNECTION', 'default'),
     ],
 
+    // Enable token cache
+    'cache' => [
+        'enabled' => env('OAUTH2_CACHE_ENABLED', false),
+        'driver' => env('OAUTH2_CACHE_CONNECTION', 'default'),
+        'ttl' => 3600,
+    ],
+
     'repositories' => [
         'client' => Repository\ClientModelRepository::class,
         'user' => Repository\UserModelRepository::class,

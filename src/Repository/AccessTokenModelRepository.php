@@ -14,4 +14,5 @@ use Menumbing\Orm\Annotation\AsRepository;
 #[AsRepository(modelClass: AccessToken::class)]
 class AccessTokenModelRepository extends TokenModelRepository implements TokenModelRepositoryInterface
 {
+    protected ?string $cachePrefix = 'ACCESS_TOKEN_';
 }

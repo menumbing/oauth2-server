@@ -14,4 +14,5 @@ use Menumbing\Orm\Annotation\AsRepository;
 #[AsRepository(modelClass: RefreshToken::class)]
 class RefreshTokenModelRepository extends TokenModelRepository implements RefreshTokenModelRepositoryInterface
 {
+    protected ?string $cachePrefix = 'REFRESH_TOKEN_';
 }

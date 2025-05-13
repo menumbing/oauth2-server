@@ -11,14 +11,16 @@ use Menumbing\Hashing\Cast\Hash;
 use Menumbing\OAuth2\Server\Constant\UserStatus;
 use Menumbing\OAuth2\Server\Contract\UserModelInterface;
 use Menumbing\OAuth2\Server\HasApiTokens;
+use Menumbing\Orm\Contract\CacheableInterface;
 use Menumbing\Orm\Model;
+use Menumbing\Orm\Trait\Cacheable;
 
 /**
  * @author  Iqbal Maulana <iq.bluejack@gmail.com>
  */
-class User extends Model implements UserModelInterface, AuthenticatableInterface
+class User extends Model implements UserModelInterface, AuthenticatableInterface, CacheableInterface
 {
-    use HasUuids, Authenticatable, HasApiTokens;
+    use HasUuids, Authenticatable, HasApiTokens, Cacheable;
 
     protected array $guarded = [];
 

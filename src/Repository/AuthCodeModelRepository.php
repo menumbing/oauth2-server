@@ -14,4 +14,5 @@ use Menumbing\Orm\Annotation\AsRepository;
 #[AsRepository(modelClass: AuthCode::class)]
 class AuthCodeModelRepository extends TokenModelRepository implements AuthCodeModelRepositoryInterface
 {
+    protected ?string $cachePrefix = 'AUTH_CODE_';
 }

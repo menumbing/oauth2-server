@@ -6,8 +6,10 @@ namespace Menumbing\OAuth2\Server\Model;
 
 use Hyperf\Database\Model\Concerns\HasUuids;
 use Menumbing\OAuth2\Server\Contract\ClientModelInterface;
+use Menumbing\Orm\Contract\CacheableInterface;
 use Menumbing\Orm\Model;
 use Menumbing\Orm\Relation\BelongsTo;
+use Menumbing\Orm\Trait\Cacheable;
 
 use function Hyperf\Config\config;
 
@@ -16,9 +18,9 @@ use function Hyperf\Config\config;
  *
  * @author  Iqbal Maulana <iq.bluejack@gmail.com>
  */
-class Client extends Model implements ClientModelInterface
+class Client extends Model implements ClientModelInterface, CacheableInterface
 {
-    use HasUuids;
+    use HasUuids, Cacheable;
 
     protected null|string $table = 'oauth_clients';
 

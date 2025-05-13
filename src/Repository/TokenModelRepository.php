@@ -6,6 +6,7 @@ namespace Menumbing\OAuth2\Server\Repository;
 
 use Carbon\Carbon;
 use Menumbing\OAuth2\Server\Contract\TokenModelInterface;
+use Menumbing\Orm\Model;
 use Menumbing\Orm\Repository;
 
 /**
@@ -13,18 +14,20 @@ use Menumbing\Orm\Repository;
  */
 abstract class TokenModelRepository extends Repository
 {
+    use CacheableToken;
+
     public function findByCodeId(string $codeId): ?TokenModelInterface
     {
-        return $this->findById($codeId);
+        if ($this->hasCache($codeId)) {
+            return $this->getCache($codeId);
+        }
+
+        return $this->cache($this->findById($codeId));
     }
 
     public function create(array $attributes): TokenModelInterface
     {
-        $this->save(
-            $token = $this->model->newInstance()->fill($attributes)
-        );
-
-        return $token;
+        return $this->save($this->newModel($attributes));
     }
 
     public function revoke(string $tokenId): void
@@ -32,6 +35,8 @@ abstract class TokenModelRepository extends Repository
         $this->save(
             $this->findById($tokenId)->revoke()
         );
+
+        $this->removeCache($tokenId);
     }
 
     public function purgeAllRevokedAndExpired(): void
@@ -42,5 +47,10 @@ abstract class TokenModelRepository extends Repository
             ->where('revoked', true)
             ->orWhere('expires_at', '<=', $now)
             ->delete();
+    }
+
+    protected function newModel(array $attributes): Model&TokenModelInterface
+    {
+        return $this->model->newInstance()->fill($attributes);
     }
 }

@@ -4,6 +4,8 @@ use Hyperf\Database\Migrations\Migration;
 use Hyperf\Database\Schema\Blueprint;
 use Hyperf\Database\Schema\Schema;
 
+use function Hyperf\Config\config;
+
 return new class extends Migration
 {
     /**
@@ -31,5 +33,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('oauth_auth_codes');
+    }
+
+    public function getConnection(): string
+    {
+        return config('oauth2-server.database.connection');
     }
 };
