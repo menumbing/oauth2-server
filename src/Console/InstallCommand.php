@@ -11,7 +11,7 @@ use Hyperf\Command\Command;
  */
 class InstallCommand extends Command
 {
-    protected ?string $signature = 'install:oauth2
+    protected ?string $signature = 'install:oauth2-server
             {--force : Overwrite keys they already exist}
             {--length=4096 : The length of the private key}';
 
@@ -19,6 +19,7 @@ class InstallCommand extends Command
 
     public function handle(): void
     {
+        $this->call('vendor:publish', ['package' => 'menumbing/orm']);
         $this->call('vendor:publish', ['package' => 'hyperf-extension/hashing']);
         $this->call('vendor:publish', ['package' => 'menumbing/auth']);
 
