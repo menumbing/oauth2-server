@@ -11,7 +11,7 @@ use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use Menumbing\OAuth2\Server\Bridge\Entity\Scope;
 use Menumbing\OAuth2\Server\Contract\ClientModelInterface;
 use Menumbing\OAuth2\Server\Contract\ClientModelRepositoryInterface;
-use Menumbing\OAuth2\Server\Exception\ForbiddenScopeException;
+use Menumbing\OAuth2\Server\Exception\AuthenticationException;
 use Menumbing\OAuth2\Server\Repository\ClientModelRepository;
 use Psr\Container\ContainerInterface;
 
@@ -73,7 +73,7 @@ class ScopeRepository implements ScopeRepositoryInterface
     {
         if (null !== $client) {
             if ($client->hasScopeControls() && ($client->isForbid($identifier) || !$client->isAllow($identifier))) {
-                throw new ForbiddenScopeException($identifier);
+                throw AuthenticationException::forbiddenToUseScope($identifier);
             }
         }
 

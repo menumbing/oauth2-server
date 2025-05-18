@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Menumbing\OAuth2\Server;
 
 use Hyperf\HttpServer\Router\Dispatched;
-use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\ResourceServer;
 use Menumbing\OAuth2\Server\Exception\AuthenticationException;
-use Menumbing\OAuth2\Server\Exception\MissingScopeException;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -44,24 +42,18 @@ trait ValidateScopes
             }
         }
 
-        throw new MissingScopeException($scopes);
+        throw AuthenticationException::missingScope($scopes);
     }
 
     protected function validateRequest(ServerRequestInterface $request): ServerRequestInterface
     {
-        try {
-            $request = $this->server->validateAuthenticatedRequest($request);
+        $request = $this->server->validateAuthenticatedRequest($request);
 
-            $this->clientId = $request->getAttribute('oauth_client_id');
-            $this->userId = $request->getAttribute('oauth_user_id');
-            $this->tokenScopes = $request->getAttribute('oauth_scopes') ?? [];
+        $this->clientId = $request->getAttribute('oauth_client_id');
+        $this->userId = $request->getAttribute('oauth_user_id');
+        $this->tokenScopes = $request->getAttribute('oauth_scopes') ?? [];
 
-            return $request;
-        } catch (OAuthServerException $e) {
-            throw $e;
-        } catch (\Exception $e) {
-            throw new AuthenticationException(sprintf('Unauthorized: %s', $e->getMessage()));
-        }
+        return $request;
     }
 
     protected function can(array $tokenScopes, string $scope): bool
