@@ -14,7 +14,7 @@ class AuthenticationException extends OAuthServerException
     public static function missingScope(array $scopes): static
     {
         return new static(
-            message: sprintf('Missing scope "%s" provided.', implode(', ', $scopes)),
+            message: sprintf('Missing scope `%s` provided.', implode(', ', $scopes)),
             code: 30,
             errorType: 'invalid_scope',
             httpStatusCode: 403,
@@ -25,7 +25,7 @@ class AuthenticationException extends OAuthServerException
     public static function forbiddenToUseScope(string $scope): static
     {
         return new static(
-            message: sprintf('This client is forbidden to use scope "%s".', $scope),
+            message: sprintf('This client is forbidden to use scope `%s`.', $scope),
             code: 31,
             errorType: 'invalid_scope',
             httpStatusCode: 403,
