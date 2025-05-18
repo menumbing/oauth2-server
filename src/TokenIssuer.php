@@ -56,6 +56,11 @@ final class TokenIssuer implements TokenIssuerInterface
         try {
             return $this->authorizationServer->respondToAccessTokenRequest($request, $response);
         } catch (OAuthServerException $e) {
+            $e->setPayload([
+                ...$e->getPayload(),
+                'code' => $e->getCode(),
+            ]);
+
             return $e->generateHttpResponse($response);
         }
     }
