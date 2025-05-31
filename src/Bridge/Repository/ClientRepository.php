@@ -46,7 +46,7 @@ class ClientRepository implements ClientRepositoryInterface
 
     protected function verifySecret(string $clientSecret, string $storedHash): bool
     {
-        return $this->config->get('oauth2.hashes_client_secret')
+        return $this->config->get('oauth2-server.hashes_client_secret')
             ? password_verify($clientSecret, $storedHash)
             : hash_equals($clientSecret, $storedHash);
     }
