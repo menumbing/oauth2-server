@@ -9,6 +9,7 @@ use Hyperf\HttpServer\Router\Dispatched;
 use HyperfExtension\Auth\Annotations\AuthUser;
 use HyperfExtension\Auth\Contracts\AuthManagerInterface;
 use Menumbing\OAuth2\Server\Contract\OAuth2GuardInterface;
+use Menumbing\OAuth2\Server\Exception\AuthenticationException;
 use Menumbing\Orm\Model;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -30,7 +31,7 @@ class GetUserInfoController
     public function infoMe(?Model $user, ServerRequestInterface $request): array
     {
         if (null === $user) {
-            throw new \LogicException('This credentials does not have user.', 404);
+            throw AuthenticationException::accessDenied();
         }
 
         $data = ['id' => $user->id, 'status' => $user->status];
