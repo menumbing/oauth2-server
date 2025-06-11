@@ -37,6 +37,6 @@ return new class extends Migration
 
     public function getConnection(): string
     {
-        return config('oauth2-server.database.connection');
+        return config('oauth2_server.database.connection');
     }
 };

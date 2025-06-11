@@ -36,11 +36,11 @@ class AuthorizationServerFactory
     public function __invoke()
     {
         return tap($this->makeAuthorizationServer(), function (AuthorizationServer $server) {
-            foreach ($this->config->get('oauth2-server.grant_types', []) as $grant) {
+            foreach ($this->config->get('oauth2_server.grant_types', []) as $grant) {
                 if ($grant === AuthCodeGrant::class || is_subclass_of($grant, AuthCodeGrant::class)) {
                     $server->enableGrantType(
                         $this->makeAuthCodeGrant($grant),
-                        $this->config->get('oauth2-server.access_token_expire_in')
+                        $this->config->get('oauth2_server.access_token_expire_in')
                     );
 
                     continue;
@@ -56,7 +56,7 @@ class AuthorizationServerFactory
 
                 $server->enableGrantType(
                     $this->makeGrant($grant),
-                    $this->config->get('oauth2-server.access_token_expire_in')
+                    $this->config->get('oauth2_server.access_token_expire_in')
                 );
             }
         });
@@ -68,8 +68,8 @@ class AuthorizationServerFactory
             clientRepository: $this->container->get(ClientRepositoryInterface::class),
             accessTokenRepository: $this->container->get(AccessTokenRepositoryInterface::class),
             scopeRepository: $this->container->get(ScopeRepositoryInterface::class),
-            privateKey: $this->makeKey($this->config->get('oauth2-server.private_key')),
-            encryptionKey: $this->config->get('oauth2-server.encryption_key'),
+            privateKey: $this->makeKey($this->config->get('oauth2_server.private_key')),
+            encryptionKey: $this->config->get('oauth2_server.encryption_key'),
             responseType: $this->makeResponseType(),
         );
     }
@@ -77,14 +77,14 @@ class AuthorizationServerFactory
     protected function makeImplicitGrant(string $grant): ImplicitGrant
     {
         return make($grant, [
-            'accessTokenTTL' => $this->config->get('oauth2-server.access_token_expire_in'),
+            'accessTokenTTL' => $this->config->get('oauth2_server.access_token_expire_in'),
         ]);
     }
 
     protected function makeAuthCodeGrant(string $grant): AuthCodeGrant
     {
         return make($grant, [
-            'authCodeTTL' => $this->config->get('oauth2-server.auth_code_expire_in'),
+            'authCodeTTL' => $this->config->get('oauth2_server.auth_code_expire_in'),
         ]);
     }
 
@@ -95,13 +95,13 @@ class AuthorizationServerFactory
                 return;
             }
 
-            $grant->setRefreshTokenTTL($this->config->get('oauth2-server.refresh_token_expire_in'));
+            $grant->setRefreshTokenTTL($this->config->get('oauth2_server.refresh_token_expire_in'));
         });
     }
 
     protected function makeResponseType(): ?ResponseTypeInterface
     {
-        if (null !== $responseType = $this->config->get('oauth2-server.response_type')) {
+        if (null !== $responseType = $this->config->get('oauth2_server.response_type')) {
             return make($responseType);
         }
 

@@ -38,7 +38,7 @@ class GetUserInfoController
         $items = collect($user->toArray());
         $tokenScopes = $this->guard($request)->tokenScopes();
 
-        foreach (config('oauth2-server.user_info_fields', []) as $scope => $fields) {
+        foreach (config('oauth2_server.user_info_fields', []) as $scope => $fields) {
             if (!in_array($scope, $tokenScopes)) {
                 continue;
             }

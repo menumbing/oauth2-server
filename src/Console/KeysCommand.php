@@ -35,8 +35,8 @@ class KeysCommand extends Command
     public function handle(): void
     {
         [$publicKey, $privateKey] = [
-            $this->config->get('oauth2-server.public_key') ?? 'runtime/oauth-public.key',
-            $this->config->get('oauth2-server.private_key') ?? 'runtime/oauth-private.key',
+            $this->config->get('oauth2_server.public_key') ?? 'runtime/oauth-public.key',
+            $this->config->get('oauth2_server.private_key') ?? 'runtime/oauth-private.key',
         ];
 
         if ((file_exists($publicKey) || file_exists($privateKey)) && !$this->input->getOption('force')) {
@@ -59,9 +59,9 @@ class KeysCommand extends Command
 
         $encryptionKey = Str::random(50);
 
-        $this->writeEnvironmentFile('OAUTH2_PRIVATE_KEY', 'oauth2-server.private_key', $privateKey);;
-        $this->writeEnvironmentFile('OAUTH2_PUBLIC_KEY', 'oauth2-server.public_key', $publicKey);;
-        $this->writeEnvironmentFile('OAUTH2_ENCRYPTION_KEY', 'oauth2-server.encryption_key', $encryptionKey);
+        $this->writeEnvironmentFile('OAUTH2_PRIVATE_KEY', 'oauth2_server.private_key', $privateKey);;
+        $this->writeEnvironmentFile('OAUTH2_PUBLIC_KEY', 'oauth2_server.public_key', $publicKey);;
+        $this->writeEnvironmentFile('OAUTH2_ENCRYPTION_KEY', 'oauth2_server.encryption_key', $encryptionKey);
 
         $this->info('Encryption keys generated successfully and set in your .env file.');
     }

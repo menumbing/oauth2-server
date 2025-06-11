@@ -28,7 +28,7 @@ final class AuthorizeRequest implements AuthorizeRequestInterface
     public function __construct(private AuthorizationServer $server, private ConfigInterface $config, ContainerInterface $container)
     {
         $this->clientRepository = $container->get(
-            $config->get('oauth2-server.repositories.client', ClientModelRepository::class)
+            $config->get('oauth2_server.repositories.client', ClientModelRepository::class)
         );
     }
 
@@ -60,8 +60,8 @@ final class AuthorizeRequest implements AuthorizeRequestInterface
     private function withCookie(ResponseInterface $response): ResponseInterface
     {
         $data = $this->parseResponse($response);
-        $cookieName = $this->config->get('oauth2-server.cookie.name', 'oauth2_token');
-        $domain = $this->config->get('oauth2-server.cookie.domain') ?? '';
+        $cookieName = $this->config->get('oauth2_server.cookie.name', 'oauth2_token');
+        $domain = $this->config->get('oauth2_server.cookie.domain') ?? '';
 
         $cookie = new Cookie(
             $cookieName,

@@ -31,7 +31,7 @@ class CheckClientCredentialsForAnyScope implements MiddlewareInterface
         ResourceServer $server
     ) {
         $this->clientRepository = $container->get(
-            $config->get('oauth2-server.repositories.client', ClientModelRepository::class)
+            $config->get('oauth2_server.repositories.client', ClientModelRepository::class)
         );
 
         $this->server = $server;

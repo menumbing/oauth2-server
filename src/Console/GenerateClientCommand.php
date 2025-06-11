@@ -37,7 +37,7 @@ class GenerateClientCommand extends Command
         $this->config = $this->container->get(ConfigInterface::class);
 
         $this->clientModelRepository = $this->container->get(
-            $this->config->get('oauth2-server.repositories.client', ClientModelRepository::class)
+            $this->config->get('oauth2_server.repositories.client', ClientModelRepository::class)
         );
     }
 
@@ -120,7 +120,7 @@ class GenerateClientCommand extends Command
 
     protected function outputClientDetails(ClientModelInterface $client): void
     {
-        if ($this->config->get('oauth2-server.hashes_client_secret')) {
+        if ($this->config->get('oauth2_server.hashes_client_secret')) {
             $this->line('<comment>Here is your new client secret. This is the only time it will be shown so don\'t lose it!</comment>');
             $this->line('');
         }

@@ -60,7 +60,7 @@ class OAuth2Guard implements OAuth2GuardInterface
 
         if ($this->bearerToken($this->request)) {
             $user = $this->authenticateWithBearerToken($this->request);
-        } elseif ($token = $this->request->cookie($this->config->get('oauth2-server.cookie.name', 'oauth2_token'))) {
+        } elseif ($token = $this->request->cookie($this->config->get('oauth2_server.cookie.name', 'oauth2_token'))) {
             $request = $this->request->withHeader('Authorization', 'Bearer ' . $token);
             $user = $this->authenticateWithBearerToken($request);;
         }
@@ -125,7 +125,7 @@ class OAuth2Guard implements OAuth2GuardInterface
     protected function getRepository(string $type, string $default): mixed
     {
         return $this->container->get(
-            $this->config->get('oauth2-server.repositories.' . $type, $default),
+            $this->config->get('oauth2_server.repositories.' . $type, $default),
         );
     }
 

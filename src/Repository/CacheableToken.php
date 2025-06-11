@@ -47,7 +47,7 @@ trait CacheableToken
             $this->driver()->set(
                 $this->makeCacheKey($token->getKey()),
                 $token->toArray(),
-                config('oauth2-server.cache.ttl')
+                config('oauth2_server.cache.ttl')
             );
         }
 
@@ -62,7 +62,7 @@ trait CacheableToken
 
     protected function isEnableCache(): bool
     {
-        return true === config('oauth2-server.cache.enabled');
+        return true === config('oauth2_server.cache.enabled');
     }
 
     protected function driver(): DriverInterface
@@ -71,7 +71,7 @@ trait CacheableToken
 
         $this->cache = $cache;
 
-        return $cache->getDriver(config('oauth2-server.cache.driver'));
+        return $cache->getDriver(config('oauth2_server.cache.driver'));
     }
 
     protected function makeCacheKey(string $key): string

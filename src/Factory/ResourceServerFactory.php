@@ -28,7 +28,7 @@ class ResourceServerFactory
     {
         return new ResourceServer(
             $this->container->get(AccessTokenRepositoryInterface::class),
-            $this->makeKey($this->config->get('oauth2-server.public_key')),
+            $this->makeKey($this->config->get('oauth2_server.public_key')),
         );
     }
 }

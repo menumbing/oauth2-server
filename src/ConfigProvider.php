@@ -71,8 +71,8 @@ class ConfigProvider
                 [
                     'id' => 'config',
                     'description' => 'The config for oauth2-server.',
-                    'source' => __DIR__ . '/../publish/oauth2-server.php',
-                    'destination' => BASE_PATH . '/config/autoload/oauth2-server.php',
+                    'source' => __DIR__ . '/../publish/oauth2_server.php',
+                    'destination' => BASE_PATH . '/config/autoload/oauth2_server.php',
                 ],
                 [
                     'id' => 'migration',
@@ -127,7 +127,7 @@ class ConfigProvider
             ];
 
             $config = $container->get(ConfigInterface::class);
-            $repositoryClass = $config->get('oauth2-server.repositories.' . $type);
+            $repositoryClass = $config->get('oauth2_server.repositories.' . $type);
 
             return make(
                 $mapping[$type],

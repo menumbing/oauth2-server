@@ -64,7 +64,7 @@ class Client extends Model implements ClientModelInterface, CacheableInterface
     {
         $this->plainSecret = $value;
 
-        if (!config('oauth2-server.hashes_client_secret')) {
+        if (!config('oauth2_server.hashes_client_secret')) {
             $this->attributes['secret'] = $value;
 
             return;

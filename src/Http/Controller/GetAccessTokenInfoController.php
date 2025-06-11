@@ -26,7 +26,7 @@ class GetAccessTokenInfoController
     public function __construct()
     {
         $this->tokenRepository = $this->container->get(
-            $this->config->get('oauth2-server.repositories.access_token', AccessTokenModelRepository::class)
+            $this->config->get('oauth2_server.repositories.access_token', AccessTokenModelRepository::class)
         );
     }
 

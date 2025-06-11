@@ -53,7 +53,7 @@ class PurgeTokenCommand extends Command
     protected function getRepository(string $type, string $default): mixed
     {
         return $this->container->get(
-            $this->config->get(sprintf('oauth2-server.repositories.%s', $type), $default)
+            $this->config->get(sprintf('oauth2_server.repositories.%s', $type), $default)
         );
     }
 }
